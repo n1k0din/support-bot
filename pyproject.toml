@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "support_bot"
+version = "0.1.0"
+description = ""
+authors = ["n1k0din <nik726@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+python-telegram-bot = "^13.9"
+environs = "^9.3.5"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

@@ -9,6 +9,7 @@ python = "^3.9"
 python-telegram-bot = "^13.9"
 environs = "^9.3.5"
 google-cloud-dialogflow = "^2.10.0"
+vk-api = "^11.9.7"
 
 [tool.poetry.dev-dependencies]
 

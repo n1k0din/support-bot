@@ -5,8 +5,9 @@ from telegram import Update
 from telegram.ext import CallbackContext, CommandHandler, Filters, MessageHandler, Updater
 
 from dialogflow import get_dialogflow_answer
+from telegram_monitoring import config_logger
 
-logger = logging.getLogger(__file__)
+logger = logging.getLogger('TG_SUPPORT_BOT')
 
 
 def start(update: Update, context: CallbackContext) -> None:
@@ -26,23 +27,16 @@ def answer(update: Update, context: CallbackContext) -> None:
     update.message.reply_text(answer_text)
 
 
-def config_logger(logger: logging.Logger) -> None:
-    """Configures logger."""
-    logger.setLevel(logging.DEBUG)
-    console_handler = logging.StreamHandler()
-    log_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    console_handler.setFormatter(log_formatter)
-    logger.addHandler(console_handler)
-
-
 def main() -> None:
     """Configures and launches the bot."""
-    config_logger(logger)
-
     env = Env()
     env.read_env()
     tg_bot_token = env('TG_BOT_TOKEN')
     dialogflow_project_id = env('DIALOGFLOW_PROJECT_ID')
+    tg_monitoring_bot_token = env('TG_MONITORING_BOT_TOKEN')
+    tg_notifications_chat_id = env('TG_NOTIFICATIONS_CHAT_ID')
+
+    config_logger(logger, tg_monitoring_bot_token, tg_notifications_chat_id)
 
     updater = Updater(tg_bot_token)
     dispatcher = updater.dispatcher
@@ -51,9 +45,13 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler('start', start))
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, answer))
 
-    updater.start_polling()
-
-    updater.idle()
+    while True:
+        try:
+            logger.info('Бот запускается.')
+            updater.start_polling()
+            updater.idle()
+        except Exception:
+            logger.exception('А у бота ошибка!')
 
 
 if __name__ == '__main__':

@@ -10,17 +10,18 @@ from dialogflow import get_dialogflow_answer
 
 def answer(dialogflow_project_id: str, event: Event, vk_api: VkApiMethod) -> None:
     """Answer the user message."""
-    answer_text = get_dialogflow_answer(
+    is_fallback, answer_text = get_dialogflow_answer(
         project_id=dialogflow_project_id,
         session_id=str(event.user_id),
         text=event.text,
     )
 
-    vk_api.messages.send(
-        user_id=event.user_id,
-        message=answer_text,
-        random_id=random.randint(1, 1000),
-    )
+    if not is_fallback:
+        vk_api.messages.send(
+            user_id=event.user_id,
+            message=answer_text,
+            random_id=random.randint(1, 1000),
+        )
 
 
 if __name__ == '__main__':

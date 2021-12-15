@@ -6,7 +6,7 @@ def get_dialogflow_answer(
     session_id: str,
     text: str,
     language_code: str = 'ru-RU',
-) -> str:
+) -> tuple[bool, str]:
     """Returns the result of detect intent with text as input."""
     session_client = dialogflow.SessionsClient()
     session = session_client.session_path(project_id, session_id)
@@ -20,4 +20,5 @@ def get_dialogflow_answer(
         },
     )
 
-    return response.query_result.fulfillment_text
+    query_result = response.query_result
+    return query_result.intent.is_fallback, query_result.fulfillment_text

@@ -17,7 +17,7 @@ def start(update: Update, context: CallbackContext) -> None:
 def answer(update: Update, context: CallbackContext) -> None:
     """Answer the user message."""
     user = update.effective_user
-    answer_text = get_dialogflow_answer(
+    is_fallback, answer_text = get_dialogflow_answer(
         project_id=context.bot_data['dialogflow_project_id'],
         session_id=str(user.id),
         text=update.message.text,

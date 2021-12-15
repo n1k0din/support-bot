@@ -18,7 +18,7 @@ def answer(update: Update, context: CallbackContext) -> None:
     user = update.effective_user
     answer_text = get_dialogflow_answer(
         project_id=context.bot_data['dialogflow_project_id'],
-        session_id=user.id,
+        session_id=str(user.id),
         text=update.message.text,
     )
 
@@ -34,7 +34,12 @@ def config_logger(logger: logging.Logger) -> None:
     logger.addHandler(console_handler)
 
 
-def get_dialogflow_answer(project_id, session_id, text, language_code='ru-RU'):
+def get_dialogflow_answer(
+    project_id: str,
+    session_id: str,
+    text: str,
+    language_code: str = 'ru-RU',
+) -> str:
     """Returns the result of detect intent with text as input."""
     session_client = dialogflow.SessionsClient()
     session = session_client.session_path(project_id, session_id)
@@ -51,7 +56,7 @@ def get_dialogflow_answer(project_id, session_id, text, language_code='ru-RU'):
     return response.query_result.fulfillment_text
 
 
-def main():
+def main() -> None:
     """Configures and launches the bot."""
     config_logger(logger)
 

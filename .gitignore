@@ -1,3 +1,5 @@
 .env
 .idea
 setup.cfg
+__pycache__
+venv/

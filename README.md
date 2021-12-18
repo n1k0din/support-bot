@@ -6,7 +6,7 @@
 - `vk_support_bot.py` - запускает бота в вк
 - `telegram_monitoring.py` - модуль для подключения мониторинга ботов и отправке логов в телеграм
 - `dialogflow.py` - подбирает ответ через DialogFlow
-- `utils/train_dialogflow.py` модуль по обучению DialogFlow (см. пример `utils/questions.json`)
+- `dialogflow_trainer/train_dialogflow.py` модуль по обучению DialogFlow (см. пример `dialogflow_trainer/questions.json`)
 
 ## Демо
 Телеграм: [@n1k0dinsupport_bot](https://t.me/n1k0dinsupport_bot)

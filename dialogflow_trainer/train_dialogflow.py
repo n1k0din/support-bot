@@ -1,3 +1,4 @@
+import argparse
 import json
 from typing import Iterable, Sequence
 
@@ -50,11 +51,21 @@ def create_dialogflow_intent(
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '--questions',
+        default='questions.json',
+        help='Questions to train DialogFlow',
+    )
+
+    args = parser.parse_args()
+    questions_filename = args.questions    
+
     env = Env()
     env.read_env()
     dialogflow_project_id = env('DIALOGFLOW_PROJECT_ID')
 
-    questions = get_questions('questions.json')
+    questions = get_questions(questions_filename)
     getting_job_topic = 'Устройство на работу'
     job_answer, job_questions = get_phrases_by_topic(getting_job_topic, questions)
 

@@ -2,6 +2,7 @@ import logging
 
 from environs import Env
 from telegram import Update
+from telegram.error import TelegramError
 from telegram.ext import CallbackContext, CommandHandler, Filters, MessageHandler, Updater
 
 from dialogflow import get_dialogflow_answer
@@ -18,7 +19,7 @@ def start(update: Update, context: CallbackContext) -> None:
 def answer(update: Update, context: CallbackContext) -> None:
     """Answer the user message."""
     user = update.effective_user
-    is_fallback, answer_text = get_dialogflow_answer(
+    _is_fallback, answer_text = get_dialogflow_answer(
         project_id=context.bot_data['dialogflow_project_id'],
         session_id=str(user.id),
         text=update.message.text,
@@ -50,7 +51,7 @@ def main() -> None:
             logger.info('Бот запускается.')
             updater.start_polling()
             updater.idle()
-        except Exception:
+        except TelegramError:
             logger.exception('А у бота ошибка!')
 
 

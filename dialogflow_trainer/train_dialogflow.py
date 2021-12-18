@@ -13,13 +13,6 @@ def get_questions(filename: str) -> dict:
         return json.load(f)
 
 
-def get_phrases_by_topic(topic: str, questions: dict) -> tuple[str, list[str]]:
-    """Extract phrases from questions db by topic name."""
-    topic_answer = questions[topic]['answer']
-    topic_questions = questions[topic]['questions']
-    return topic_answer, topic_questions
-
-
 def create_dialogflow_intent(
     project_id: str,
     display_name: str,
@@ -66,12 +59,14 @@ if __name__ == '__main__':
     dialogflow_project_id = env('DIALOGFLOW_PROJECT_ID')
 
     questions = get_questions(questions_filename)
-    getting_job_topic = 'Устройство на работу'
-    job_answer, job_questions = get_phrases_by_topic(getting_job_topic, questions)
 
-    dialog_flow_response = create_dialogflow_intent(
-        project_id=dialogflow_project_id,
-        display_name=getting_job_topic,
-        training_phrases_parts=job_questions,
-        message_texts=[job_answer],
-    )
+    for topic, topic_questions_and_answer in questions.items():
+        topic_answer = topic_questions_and_answer['answer']
+        topic_questions = topic_questions_and_answer['questions']
+
+        dialog_flow_response = create_dialogflow_intent(
+            project_id=dialogflow_project_id,
+            display_name=topic,
+            training_phrases_parts=topic_questions,
+            message_texts=[topic_answer],
+        )

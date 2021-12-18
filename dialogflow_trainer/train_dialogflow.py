@@ -48,7 +48,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--questions',
         default='questions.json',
-        help='Questions to train DialogFlow',
+        help='Questions to train DialogFlow, questions.json default',
     )
 
     args = parser.parse_args()

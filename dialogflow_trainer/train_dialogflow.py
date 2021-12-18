@@ -1,7 +1,9 @@
 import argparse
 import json
+import logging
 from typing import Iterable, Sequence
 
+import google
 from environs import Env
 from google.cloud import dialogflow
 from google.cloud.dialogflow_v2 import Intent
@@ -52,7 +54,7 @@ if __name__ == '__main__':
     )
 
     args = parser.parse_args()
-    questions_filename = args.questions    
+    questions_filename = args.questions
 
     env = Env()
     env.read_env()
@@ -64,9 +66,12 @@ if __name__ == '__main__':
         topic_answer = topic_questions_and_answer['answer']
         topic_questions = topic_questions_and_answer['questions']
 
-        dialog_flow_response = create_dialogflow_intent(
-            project_id=dialogflow_project_id,
-            display_name=topic,
-            training_phrases_parts=topic_questions,
-            message_texts=[topic_answer],
-        )
+        try:
+            dialog_flow_response = create_dialogflow_intent(
+                project_id=dialogflow_project_id,
+                display_name=topic,
+                training_phrases_parts=topic_questions,
+                message_texts=[topic_answer],
+            )
+        except google.api_core.exceptions.InvalidArgument:
+            logging.warning(f'Error of adding {topic}, may be already exist?')
